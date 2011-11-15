@@ -1,0 +1,108 @@
+/* kitchen-sink.css */
+body{
+	font-size:85%;
+	background:#FFF;
+	font-family: Helvetica;
+	color:#333;
+	margin:0;
+	padding:0;
+	margin-bottom:285px;
+}
+a, a.visited{
+	text-decoration:none;
+	color:#fa1937;
+}
+a:active, a, :focus{
+  outline: none;
+  -moz-outline-style: none;
+}
+h1{
+	color:#FFF;
+}
+.introduction{
+	line-height: 1.3em;
+	width:750px;
+	margin:0 auto;
+	font-size:95%;
+}
+.phonoHldr{
+	margin:0 auto;
+	width:750px;
+}
+.phono{
+	background:#F5F5F5;
+	border:1px solid #D9D9D9;
+	margin:15px 0;
+	position: relative;
+}
+.chatInput{
+	float:right;
+}
+#sample-header{
+	background:#191919;
+    height:195px;
+    margin-bottom:25px;
+}
+#sample-header .header{
+    width:925px;
+    position:relative;
+    margin:0 auto;
+}
+#sample-header .logo{
+    position:absolute;
+    top:20px;
+    left:0;
+    width:120px;
+    height:153px;
+}
+#sample-header .intro{
+    position:absolute;
+    top:10px;
+    left:150px;
+    color:#CCC
+}
+
+input.pretty{
+	border:2px solid #DDDDDD;
+	padding:4px 8px;
+	width:270px;
+	color:#666;
+	-moz-border-radius: 100px;
+	-webkit-border-radius: 100px;
+}
+#codePreview{
+	position: fixed; 
+	left: 0px; 
+	right: 0px; 
+	bottom: 0px;
+	height: 25px;
+	width: 100%;
+	background:#F1EFE7;
+}
+a.codeToggler{
+	display:block;
+	padding:0 5px;
+	line-height:27px;
+	height:25px;
+	background:gray;
+	color:#FFF;
+	text-align:center;
+}
+.error{
+	padding:6px;
+	background:#FFFFE6;
+	border:1px solid #FFCC00;
+	text-align:center;
+	line-height:1.5em;
+	font-size:95%;
+}
+span.tiny{
+	color:#999;
+	font-size:87%;
+	padding-left:12px;
+}
+
+
+.controls{
+	text-align:center;
+}

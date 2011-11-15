@@ -1,0 +1,36 @@
+<html>
+  <head>
+    <script src="http://code.jquery.com/jquery-1.4.2.min.js"></script>
+    <script src="http://s.phono.com/releases/0.1/jquery.phono.js"></script>
+  </head>
+  <body>
+
+    <input id="call" type="button" disabled="true" value="Loading..." />
+    <span id="status"></span>
+
+    <script>
+      var phono = $.phono({
+        onReady: function() {
+          $("#call").attr("disabled", false).val("Call");
+        }
+      });
+
+      $("#call").click(function() {
+        $("#call").attr("disabled", true).val("Busy");
+        phono.phone.dial("985-655-2500", {
+          onRing: function() {
+            $("#status").html("Ringing");
+          },
+          onAnswer: function() {
+            $("#status").html("Answered");
+          },
+          onHangup: function() {
+            $("#call").attr("disabled", false).val("Call");
+            $("#status").html("Hangup");
+          }
+        });
+      });
+    </script>
+
+  </body>
+</html>
