@@ -5014,11 +5014,13 @@ FlashAudio.prototype.play = function(transport, autoPlay) {
     url = transport.uri.replace("protocol",this.config.protocol);
     var luri = url;
     var uri = Phono.util.parseUri(url);
+    var location = Phono.util.parseUri(document.location);
     
     if (uri.protocol == "rtp") return null;
-    if (uri.protocol.length < 2) {
+    if (url.indexOf("//") == 0) {
+        luri = location.protocol+":"+url;
+    } else if (uri.protocol.length < 2) {
         // We are relative, so use the document.location
-        var location = Phono.util.parseUri(document.location);
         luri = location.protocol+"://"+location.authority+location.directoryPath+url;
     }
     
@@ -5299,11 +5301,13 @@ JavaAudio.prototype.play = function(transport, autoPlay) {
     var player;
     var luri = url;
     var uri = Phono.util.parseUri(url);
+    var location = Phono.util.parseUri(document.location);
 
     if (uri.protocol == "rtp") return null;
-    if (uri.protocol.length < 2) {
+    if (url.indexOf("//") == 0) {
+        luri = location.protocol+":"+url;
+    } else if (uri.protocol.length < 2) {
         // We are relative, so use the document.location
-        var location = Phono.util.parseUri(document.location);
         luri = location.protocol+"://"+location.authority+location.directoryPath+url;
     }
 
@@ -5595,11 +5599,13 @@ PhonegapIOSAudio.prototype.play = function(transport, autoPlay) {
     var url = transport.uri;
     var luri = url;
     var uri = Phono.util.parseUri(url);
+    var location = Phono.util.parseUri(document.location);
 
     if (uri.protocol == "rtp") return null;
-    if (uri.protocol.length < 2) {
+    if (url.indexOf("//") == 0) {
+        luri = location.protocol+":"+url;
+    } else if (uri.protocol.length < 2) {
         // We are relative, so use the document.location
-        var location = Phono.util.parseUri(document.location);
         luri = location.protocol+"://"+location.directoryPath.substring(0,location.directoryPath.length)+url;
         luri = encodeURI(luri);
     }
@@ -5905,11 +5911,13 @@ PhonegapAndroidAudio.prototype.play = function(transport, autoPlay) {
     var url = transport.uri;
     var luri = url;
     var uri = Phono.util.parseUri(url);
+    var location = Phono.util.parseUri(document.location);
 
     if (uri.protocol == "rtp") return null;
-    if (uri.protocol.length < 2) {
+    if (url.indexOf("//") == 0) {
+        luri = location.protocol+":"+url;
+    } else if (uri.protocol.length < 2) {
         // We are relative, so use the document.location
-        var location = Phono.util.parseUri(document.location);
         luri = location.protocol+"://"+location.directoryPath.substring(0,location.directoryPath.length)+url;
         luri = encodeURI(luri);
     }
