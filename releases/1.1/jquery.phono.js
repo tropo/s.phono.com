@@ -1,14 +1,14 @@
 
 /*!
  * Copyright 2013 Voxeo Labs, Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you
  * may not use this file except in compliance with the License.
  *
  * You may obtain a copy of the License at
  *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
@@ -74,7 +74,7 @@ FABridge.addToUserTypes = function()
 	for (var i = 0; i < arguments.length; i++)
 	{
 		FABridge.userTypes[arguments[i]] = {
-			'typeName': arguments[i], 
+			'typeName': arguments[i],
 			'enriched': false
 		};
 	}
@@ -97,11 +97,11 @@ function instanceFactory(objID)
 }
 
 function FABridge__invokeJSFunction(args)
-{  
+{
     var funcID = args[0];
     var throughArgs = args.concat();//FABridge.argsToArray(arguments);
     throughArgs.shift();
-   
+
     var bridge = FABridge.extractBridgeFromID(funcID);
     return bridge.invokeLocalFunction(funcID, throughArgs);
 }
@@ -366,18 +366,18 @@ FABridge.prototype =
     	var isUserProto = ((typeof window[simpleType] == "function") && (typeof FABridge.userTypes[simpleType] != "undefined"));
 
     	var protoEnriched = false;
-    	
+
     	if (isUserProto) {
 	    	protoEnriched = FABridge.userTypes[simpleType].enriched;
     	}
     	var toret = {
-    		'simpleType': simpleType, 
-    		'isUserProto': isUserProto, 
+    		'simpleType': simpleType,
+    		'isUserProto': isUserProto,
     		'protoEnriched': protoEnriched
     	};
     	return toret;
-	}, 
-	
+	},
+
     // accepts an object reference, returns a type object matching the obj reference.
     getTypeFromName: function(objTypeName)
     {
@@ -385,7 +385,7 @@ FABridge.prototype =
     	var toret = this.remoteTypeCache[objTypeName];
     	if (ut.isUserProto)
 		{
-    		//enrich both of the prototypes: the FABridge one, as well as the class in the page. 
+    		//enrich both of the prototypes: the FABridge one, as well as the class in the page.
 	    	if (!ut.protoEnriched)
 			{
 
@@ -393,7 +393,7 @@ FABridge.prototype =
 				{
 		    		toret[i] = window[ut.simpleType].prototype[i];
 		    	}
-				
+
 				window[ut.simpleType].prototype = toret;
 				this.remoteTypeCache[objTypeName] = toret;
 				FABridge.userTypes[ut.simpleType].enriched = true;
@@ -627,7 +627,7 @@ FABridge.prototype =
         else
         {
             return value;
-        }   
+        }
     }
 };
 
@@ -655,12 +655,12 @@ ASProxy.prototype =
     call: function(funcName, args)
     {
         this.bridge.callASMethod(this.fb_instance_id, funcName, args);
-    }, 
-    
+    },
+
     addRef: function() {
         this.bridge.addRef(this);
-    }, 
-    
+    },
+
     release: function() {
         this.bridge.release(this);
     }
@@ -698,7 +698,7 @@ function Phono(config) {
 
     // Wrap ourselves with logging
     Phono.util.loggify("Phono", this);
-   
+
     if(!config.apiKey) {
         this.config.apiKey = prompt("Please enter your Phono API Key.\n\nTo get a new one sign up for a free account at: http://www.phono.com");
         if(!this.config.apiKey) {
@@ -709,7 +709,7 @@ function Phono(config) {
             throw message;
         }
     }
-   
+
     // Initialize Fields
     this.sessionId = null;
     this.connTimers = [];
@@ -736,27 +736,27 @@ function Phono(config) {
         // We need to make a connection
         var phono = this;
         var cfunc = function(curl) {
-            if (!phono.connected()) { 
+            if (!phono.connected()) {
                 Phono.log.debug("trying connection URL "+curl);
                 if (phono.connection != null){
                     phono.connection.disconnect();
                 }
                 phono.connection = new Strophe.Connection(curl);
-                
+
                 phono.connection.xmlInput = function (body) {
                     Phono.log.debug("[WIRE] (i) " + xmlSerializer.serializeToString(body));
                 };
-                
+
                 phono.connection.xmlOutput = function (body) {
                 Phono.log.debug("[WIRE] (o) " + xmlSerializer.serializeToString(body));
                 };
-                
+
                 phono.connect();
             } else {
             Phono.log.debug("[LB] already connected... not trying URL "+curl);
             }
-        }  
-        
+        }
+
         Phono.log.debug("[LB] Invoke loadbalancer");
         // Create a dummy object so that the Strophe plugins get loaded
         var dummy = connection = new PhonoStrophe.Connection(this.config.connectionUrl);
@@ -792,7 +792,7 @@ function Phono(config) {
                             // otherwise just append /http-bind
                             var path = uri.pathname;
                             if (uri.hostname == nexts.target) {
-                                if (path.indexOf('/') != 0) path = "/" + path; 
+                                if (path.indexOf('/') != 0) path = "/" + path;
                             } else {
                                 path = "/http-bind";
                             }
@@ -804,8 +804,8 @@ function Phono(config) {
                         }
                         Phono.log.debug("[LB] Adding default connection URL "+phono.config.connectionUrl);
                         curls.push(phono.config.connectionUrl);
-                        Phono.log.debug("[LB] Initial connection URL "+curls[0]);        
-                        
+                        Phono.log.debug("[LB] Initial connection URL "+curls[0]);
+
                         // add timers for all possible srv entries (and default)
                         // if any work, we will skip the rest
                         var t = 0;
@@ -828,16 +828,16 @@ function Phono(config) {
             Phono.log.debug("[LB] Using default connection URL "+phono.config.connectionUrl);
             cfunc(phono.config.connectionUrl);
         }
-    } 
+    }
 };
 
 (function() {
-   
+
     // ======================================================================
-   
+
 ;Phono.util = {
    guid: function() {
-     return MD5.hexdigest(new String((new Date()).getTime())) 
+     return MD5.hexdigest(new String((new Date()).getTime()))
    },
    escapeXmppNode: function(input) {
       var node = input;
@@ -850,7 +850,7 @@ function Phono(config) {
 		node = node.replace(/:/g, "\\3a");
 		node = node.replace(/</g, "\\3c");
 		node = node.replace(/>/g, "\\3e");
-		node = node.replace(/@/g, "\\40");         
+		node = node.replace(/@/g, "\\40");
       return node;
    },
    // From jQuery 1.4.2
@@ -889,14 +889,14 @@ function Phono(config) {
 		}
 
 		return object;
-	},   
+	},
 	isFunction: function( obj ) {
 		return toString.call(obj) === "[object Function]";
 	},
 
 	isArray: function( obj ) {
 		return toString.call(obj) === "[object Array]";
-	},   
+	},
 	isPlainObject: function( obj ) {
 		if ( !obj || toString.call(obj) !== "[object Object]" || obj.nodeType || obj.setInterval ) {
 			return false;
@@ -908,9 +908,9 @@ function Phono(config) {
 		}
 		var key;
 		for ( key in obj ) {}
-		
+
 		return key === undefined || hasOwnProperty.call( obj, key );
-	},	
+	},
    extend: function() {
    	var target = arguments[0] || {}, i = 1, length = arguments.length, deep = false, options, name, src, copy;
    	if ( typeof target === "boolean" ) {
@@ -945,11 +945,11 @@ function Phono(config) {
    	}
    	return target;
    },
-   
-   
+
+
    // Inspired by...
    // written by Dean Edwards, 2005
-   // with input from Tino Zijdel, Matthias Miller, Diego Perini   
+   // with input from Tino Zijdel, Matthias Miller, Diego Perini
    eventCounter: 1,
    addEvent: function(target, type, handler) {
 		// assign each event handler a unique ID
@@ -1007,17 +1007,17 @@ function Phono(config) {
         var uriPartNames = ["source","protocol","authority","domain","port","path","directoryPath","fileName","query","anchor"];
         var uriParts = new RegExp("^(?:([^:/?#.]+):)?(?://)?(([^:/?#]*)(?::(\\d*))?)?((/(?:[^?#](?![^?#/]*\\.[^?#/.]+(?:[\\?#]|$)))*/?)?([^?#/]*))?(?:\\?([^#]*))?(?:#(.*))?").exec(sourceUri);
         var uri = {};
-        
+
         for(var i = 0; i < 10; i++){
         uri[uriPartNames[i]] = (uriParts[i] ? uriParts[i] : "");
         }
-        
+
         // Always end directoryPath with a trailing backslash if a path was present in the source URI
         // Note that a trailing backslash is NOT automatically inserted within or appended to the "path" key
         if(uri.directoryPath.length > 0){
             uri.directoryPath = uri.directoryPath.replace(/\/?$/, "/");
         }
-    
+
         return uri;
     },
     filterWideband: function(offer, wideband) {
@@ -1074,7 +1074,7 @@ function Phono(config) {
     loggyFunction: function(objName, obj, funcName) {
         var original = obj[funcName];
         obj[funcName] = function() {
-            try { 
+            try {
                 // Convert arguments to a real array
                 var sep = "";
                 var args = "";
@@ -1152,14 +1152,14 @@ function Phono(config) {
         if (typeof console === "undefined" || typeof console.log === "undefined") {
          console = {};
          console.log = function(mess) {
-         // last ditch loging uncomment this 
+         // last ditch loging uncomment this
 	//		alert(mess)
 		};
         }
         console.log("Phono Logger Initialized")
         logger.initialized = true;
         logger.flushEventQueue();
-    });    
+    });
 };
 
 (function() {
@@ -1236,9 +1236,9 @@ function Phono(config) {
         this.eventQueue.push(loggingEvent);
 
         this.flushEventQueue();
-        
+
     };
-    
+
     PhonoLogger.prototype.flushEventQueue = function() {
         if(this.initialized) {
             var logger = this;
@@ -1312,19 +1312,19 @@ function Phono(config) {
     function bool(obj) {
         return Boolean(obj);
     };
-    
+
 })();
 
 
-   
+
     // ======================================================================
 
-   
+
     // Global
-    Phono.version = "1.0";
-   
+    Phono.version = "1.1";
+
     Phono.log = new PhonoLogger();
-   
+
     Phono.registerPlugin = function(name, config) {
         if(!Phono.plugins) {
             Phono.plugins = {};
@@ -1342,8 +1342,8 @@ function Phono(config) {
             if(!this.connection.connected) {
                 Phono.log.debug("Connecting....");
                 phono.connection.connect(
-                    phono.config.gateway, 
-                    null, 
+                    phono.config.gateway,
+                    null,
                     phono.handleStropheStatusChange,
                     50
                     );
@@ -1366,7 +1366,7 @@ function Phono(config) {
 
     Phono.prototype.handleStropheStatusChange = function(status) {
         if (status === Strophe.Status.CONNECTED) {
-            if (this.connTimer != null){ 
+            if (this.connTimer != null){
                 Phono.log.debug("Clear timeout");
                 clearTimeout(this.connTimer);
             }
@@ -1398,10 +1398,10 @@ function Phono(config) {
             })
             .t(phono.config.apiKey).up()
             .c("caps", {
-                xmlns:"http://phono.com/caps", 
+                xmlns:"http://phono.com/caps",
                 ver:Phono.version
                 });
-           
+
             // Loop over all plugins adding any caps that we have
             for(pluginName in Phono.plugins) {
                 if (phono[pluginName] && phono[pluginName].getCaps) {
@@ -1410,11 +1410,11 @@ function Phono(config) {
                 }
             }
             apiKeyIQ = apiKeyIQ.c('browser',{
-                version:navigator.appVersion, 
+                version:navigator.appVersion,
                 agent:navigator.userAgent
                 }).up();
-           
-            phono.connection.sendIQ(apiKeyIQ, 
+
+            phono.connection.sendIQ(apiKeyIQ,
                 phono.handleKeySuccess,
                 function() {
                     Phono.events.trigger(phono, "error", {
@@ -1476,12 +1476,12 @@ var Base64 = (function () {
             var chr1, chr2, chr3;
             var enc1, enc2, enc3, enc4;
             var i = 0;
-        
+
             do {
                 chr1 = input.charCodeAt(i++);
                 chr2 = input.charCodeAt(i++);
                 chr3 = input.charCodeAt(i++);
-                
+
                 enc1 = chr1 >> 2;
                 enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
                 enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
@@ -1492,14 +1492,14 @@ var Base64 = (function () {
                 } else if (isNaN(chr3)) {
                     enc4 = 64;
                 }
-                
+
                 output = output + keyStr.charAt(enc1) + keyStr.charAt(enc2) +
                     keyStr.charAt(enc3) + keyStr.charAt(enc4);
             } while (i < input.length);
-            
+
             return output;
         },
-        
+
         /**
          * Decodes a base64 string.
          * @param {String} input The string to decode.
@@ -1509,22 +1509,22 @@ var Base64 = (function () {
             var chr1, chr2, chr3;
             var enc1, enc2, enc3, enc4;
             var i = 0;
-            
+
             // remove all characters that are not A-Z, a-z, 0-9, +, /, or =
             input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
-            
+
             do {
                 enc1 = keyStr.indexOf(input.charAt(i++));
                 enc2 = keyStr.indexOf(input.charAt(i++));
                 enc3 = keyStr.indexOf(input.charAt(i++));
                 enc4 = keyStr.indexOf(input.charAt(i++));
-                
+
                 chr1 = (enc1 << 2) | (enc2 >> 4);
                 chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
                 chr3 = ((enc3 & 3) << 6) | enc4;
-                
+
                 output = output + String.fromCharCode(chr1);
-                
+
                 if (enc3 != 64) {
                     output = output + String.fromCharCode(chr2);
                 }
@@ -1532,7 +1532,7 @@ var Base64 = (function () {
                     output = output + String.fromCharCode(chr3);
                 }
             } while (i < input.length);
-            
+
             return output;
         }
     };
@@ -1658,7 +1658,7 @@ var MD5 = (function () {
     var md5_ii = function (a, b, c, d, x, s, t) {
         return md5_cmn(c ^ (b | (~d)), a, b, x, s, t);
     };
-    
+
     /*
      * Calculate the MD5 of an array of little-endian words, and a bit length
      */
@@ -1679,7 +1679,7 @@ var MD5 = (function () {
             oldb = b;
             oldc = c;
             oldd = d;
-            
+
             a = md5_ff(a, b, c, d, x[i+ 0], 7 , -680876936);
             d = md5_ff(d, a, b, c, x[i+ 1], 12, -389564586);
             c = md5_ff(c, d, a, b, x[i+ 2], 17,  606105819);
@@ -1696,7 +1696,7 @@ var MD5 = (function () {
             d = md5_ff(d, a, b, c, x[i+13], 12, -40341101);
             c = md5_ff(c, d, a, b, x[i+14], 17, -1502002290);
             b = md5_ff(b, c, d, a, x[i+15], 22,  1236535329);
-            
+
             a = md5_gg(a, b, c, d, x[i+ 1], 5 , -165796510);
             d = md5_gg(d, a, b, c, x[i+ 6], 9 , -1069501632);
             c = md5_gg(c, d, a, b, x[i+11], 14,  643717713);
@@ -1713,7 +1713,7 @@ var MD5 = (function () {
             d = md5_gg(d, a, b, c, x[i+ 2], 9 , -51403784);
             c = md5_gg(c, d, a, b, x[i+ 7], 14,  1735328473);
             b = md5_gg(b, c, d, a, x[i+12], 20, -1926607734);
-            
+
             a = md5_hh(a, b, c, d, x[i+ 5], 4 , -378558);
             d = md5_hh(d, a, b, c, x[i+ 8], 11, -2022574463);
             c = md5_hh(c, d, a, b, x[i+11], 16,  1839030562);
@@ -1730,7 +1730,7 @@ var MD5 = (function () {
             d = md5_hh(d, a, b, c, x[i+12], 11, -421815835);
             c = md5_hh(c, d, a, b, x[i+15], 16,  530742520);
             b = md5_hh(b, c, d, a, x[i+ 2], 23, -995338651);
-            
+
             a = md5_ii(a, b, c, d, x[i+ 0], 6 , -198630844);
             d = md5_ii(d, a, b, c, x[i+ 7], 10,  1126891415);
             c = md5_ii(c, d, a, b, x[i+14], 15, -1416354905);
@@ -1747,7 +1747,7 @@ var MD5 = (function () {
             d = md5_ii(d, a, b, c, x[i+11], 10, -1120210379);
             c = md5_ii(c, d, a, b, x[i+ 2], 15,  718787259);
             b = md5_ii(b, c, d, a, x[i+ 9], 21, -343485551);
-            
+
             a = safe_add(a, olda);
             b = safe_add(b, oldb);
             c = safe_add(c, oldc);
@@ -1763,14 +1763,14 @@ var MD5 = (function () {
     var core_hmac_md5 = function (key, data) {
         var bkey = str2binl(key);
         if(bkey.length > 16) { bkey = core_md5(bkey, key.length * chrsz); }
-        
+
         var ipad = new Array(16), opad = new Array(16);
         for(var i = 0; i < 16; i++)
         {
             ipad[i] = bkey[i] ^ 0x36363636;
             opad[i] = bkey[i] ^ 0x5C5C5C5C;
         }
-        
+
         var hash = core_md5(ipad.concat(str2binl(data)), 512 + data.length * chrsz);
         return core_md5(opad.concat(hash), 512 + 128);
     };
@@ -2040,7 +2040,7 @@ Strophe = {
         STANZAS: "urn:ietf:params:xml:ns:xmpp-stanzas"
     },
 
-    /** Function: addNamespace 
+    /** Function: addNamespace
      *  This function is used to extend the current namespaces in
      *	Strophe.NS.  It takes a key and a value with the key being the
      *	name of the new namespace, with its actual value.
@@ -2050,7 +2050,7 @@ Strophe = {
      *  Parameters:
      *    (String) name - The name under which the namespace will be
      *      referenced under Strophe.NS
-     *    (String) value - The actual namespace.	
+     *    (String) value - The actual namespace.
      */
     addNamespace: function (name, value)
     {
@@ -2247,7 +2247,7 @@ Strophe = {
                     if (arguments[a].hasOwnProperty(k)) {
                         node.setAttribute(k, arguments[a][k]);
                     }
-                } 
+                }
             }
         }
 
@@ -2263,12 +2263,12 @@ Strophe = {
      *	Returns:
      *      Escaped text.
      */
-    xmlescape: function(text) 
+    xmlescape: function(text)
     {
 	text = text.replace(/\&/g, "&amp;");
         text = text.replace(/</g,  "&lt;");
         text = text.replace(/>/g,  "&gt;");
-        return text;    
+        return text;
     },
 
     /** Function: xmlTextNode
@@ -2868,7 +2868,7 @@ Strophe.Handler = function (handler, ns, name, type, id, from, options)
     this.type = type;
     this.id = id;
     this.options = options || {matchbare: false};
-    
+
     // default matchBare to false if undefined
     if (!this.options.matchBare) {
         this.options.matchBare = false;
@@ -2898,7 +2898,7 @@ Strophe.Handler.prototype = {
     {
         var nsMatch;
         var from = null;
-        
+
         if (this.options.matchBare) {
             from = Strophe.getBareJidFromJid(elem.getAttribute('from'));
         } else {
@@ -3550,10 +3550,10 @@ Strophe.Connection.prototype = {
 
     /** Function: flush
      *  Immediately send any pending outgoing data.
-     *  
+     *
      *  Normally send() queues outgoing data until the next idle period
      *  (100ms), which optimizes network use in the common cases when
-     *  several send()s are called in succession. flush() can be used to 
+     *  several send()s are called in succession. flush() can be used to
      *  immediately send all pending data.
      */
     flush: function ()
@@ -3570,9 +3570,9 @@ Strophe.Connection.prototype = {
      *  Parameters:
      *    (XMLElement) elem - The stanza to send.
      *    (Function) callback - The callback function for a successful request.
-     *    (Function) errback - The callback function for a failed or timed 
+     *    (Function) errback - The callback function for a failed or timed
      *      out request.  On timeout, the stanza will be null.
-     *    (Integer) timeout - The time specified in milliseconds for a 
+     *    (Integer) timeout - The time specified in milliseconds for a
      *      timeout to occur.
      *
      *  Returns:
@@ -3648,7 +3648,7 @@ Strophe.Connection.prototype = {
                 message: "Cannot queue non-DOMElement."
             };
         }
-        
+
         this._data.push(element);
     },
 
@@ -3731,7 +3731,7 @@ Strophe.Connection.prototype = {
      *  boolean). When matchBare is true, the from parameter and the from
      *  attribute on the stanza will be matched as bare JIDs instead of
      *  full JIDs. To use this, pass {matchBare: true} as the value of
-     *  options. The default value for matchBare is false. 
+     *  options. The default value for matchBare is false.
      *
      *  The return value should be saved if you wish to remove the handler
      *  with deleteHandler().
@@ -3795,14 +3795,14 @@ Strophe.Connection.prototype = {
             // setup timeout handler
             this._disconnectTimeout = this._addSysTimedHandler(
                 30000, this._onDisconnectTimeout.bind(this));
-                
+
             // remove all of the requests
             if (this._requests.length > 0) {
             	for (var i=0; i<this._requests.length; i++) {
         			this._removeRequest(this._requests[i]);
             	}
         	}
-                
+
             this._sendTerminate();
         }
     },
@@ -3981,7 +3981,7 @@ Strophe.Connection.prototype = {
                 } catch (e) {
                     Strophe.error("send func caught an error in _requests[" + i +
                           "], reqStatus: " + req.xhr.status);
-                    Strophe.error("exception was "+e);  
+                    Strophe.error("exception was "+e);
                 }
             };
 
@@ -4358,7 +4358,7 @@ Strophe.Connection.prototype = {
         if (hold) { this.hold = parseInt(hold, 10); }
         var wait = bodyWrap.getAttribute('wait');
         if (wait) { this.wait = parseInt(wait, 10); }
-        
+
 
         var do_sasl_plain = false;
         var do_sasl_digest_md5 = false;
@@ -4558,7 +4558,7 @@ Strophe.Connection.prototype = {
      */
     _quote: function (str)
     {
-        return '"' + str.replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '"'; 
+        return '"' + str.replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '"';
         //" end string workaround for emacs
     },
 
@@ -5002,7 +5002,7 @@ if (callback) {
     callback(Strophe, $build, $msg, $iq, $pres);
 }
 // notice that this exposes our strophe as PhonoStrophe, protecting the any
-// user supplied strophe for collisions. 
+// user supplied strophe for collisions.
 })(function () {
   window.PhonoStrophe = arguments[0];
   window.PhonoStrophe.build = arguments[1];
@@ -5132,7 +5132,7 @@ PhonoStrophe.addConnectionPlugin('cors', {
          if("log" != type.toLowerCase()) {
              Phono.log.info("[EVENT] " + type + "[" + data + "]");
          }
-         handler.call(target, event, data); 
+         handler.call(target, event, data);
       }
    },
    handle: function(event, data) {
@@ -5158,13 +5158,13 @@ PhonoStrophe.addConnectionPlugin('cors', {
 };
 /*
  * jQuery Tools 1.2.2 - The missing UI library for the Web
- * 
+ *
  * [toolbox.flashembed]
- * 
+ *
  * NO COPYRIGHTS OR LICENSES. DO WHAT YOU LIKE.
- * 
+ *
  * http://flowplayer.org/tools/
- * 
+ *
  * File generated: Tue May 25 08:09:15 GMT 2010
  */
 (function(){function f(a,b){if(b)for(key in b)if(b.hasOwnProperty(key))a[key]=b[key];return a}function l(a,b){var c=[];for(var d in a)if(a.hasOwnProperty(d))c[d]=b(a[d]);return c}function m(a,b,c){if(e.isSupported(b.version))a.innerHTML=e.getHTML(b,c);else if(b.expressInstall&&e.isSupported([6,65]))a.innerHTML=e.getHTML(f(b,{src:b.expressInstall}),{MMredirectURL:location.href,MMplayerType:"PlugIn",MMdoctitle:document.title});else{if(!a.innerHTML.replace(/\s/g,"")){a.innerHTML="<h2>Flash version "+
@@ -5193,26 +5193,26 @@ function FlashAudio(phono, config, callback) {
 
     // Bind Event Listeners
     Phono.events.bind(this, config);
-    
+
     var containerId = this.config.containerId;
-    
+
     // Create flash continer is user did not specify one
     if(!containerId) {
 	this.config.containerId = containerId = this.createContainer();
     }
-    
+
     // OMG! Fix position of flash movie to be integer pixel
     Phono.events.bind(this, {
         onPermissionBoxShow: function() {
             var p = $("#"+containerId).position();
             $("#"+containerId).css("left",parseInt(p.left));
             $("#"+containerId).css("top",parseInt(p.top));
-        } 
-    });		
-    
+        }
+    });
+
     var plugin = this;
-    
-    // Flash movie is embedded asynchronously so we need a listener 
+
+    // Flash movie is embedded asynchronously so we need a listener
     // to fire when the SWF is loaded and ready for action
     FABridge.addInitializationCallback(containerId, function(){
         Phono.log.info("FlashAudio Ready");
@@ -5233,7 +5233,7 @@ function FlashAudio(phono, config, callback) {
     });
 
     wmodeSetting = "opaque";
-    
+
     if ((navigator.appVersion.indexOf("X11")!=-1) || (navigator.appVersion.indexOf("Linux")!=-1) || ($.browser.opera)) {
         wmodeSetting = "window";
     }
@@ -5246,14 +5246,14 @@ function FlashAudio(phono, config, callback) {
             Phono.log.error("Timeout waiting for flash to load.");
         }
     }, plugin.config.watchdog);
-    
+
     // Embed flash plugin
-    flashembed(containerId, 
+    flashembed(containerId,
                {
                    id:containerId + "id",
                    src:this.config.swf + "?rnd=" + new Date().getTime(),
                    wmode:wmodeSetting
-               }, 
+               },
                {
                    bridgeName:containerId
                }
@@ -5265,7 +5265,7 @@ FlashAudio.count = 0;
 // FlashAudio Functions
 //
 // Most of these will simply pass through to the underlying Flash layer.
-// In the old API this was done by 'wrapping' the Flash object. I've chosen a more verbos 
+// In the old API this was done by 'wrapping' the Flash object. I've chosen a more verbos
 // approach to aid in debugging now that the Flash side has been reduced to a few simple calls.
 // =============================================================================================
 
@@ -5289,7 +5289,7 @@ FlashAudio.prototype.play = function(transport, autoPlay) {
     var luri = url;
     var uri = Phono.util.parseUri(url);
     var location = Phono.util.parseUri(document.location);
-    
+
     if (uri.protocol == "rtp") return null;
     if (url.indexOf("//") == 0) {
         luri = location.protocol+":"+url;
@@ -5297,7 +5297,7 @@ FlashAudio.prototype.play = function(transport, autoPlay) {
         // We are relative, so use the document.location
         luri = location.protocol+"://"+location.authority+location.directoryPath+url;
     }
-    
+
     var player;
     if (this.config.bridged == false && transport.peerID != undefined && this.config.cirrus != undefined) {
         Phono.log.info("Direct media play with peer " + transport.peerID);
@@ -5331,7 +5331,7 @@ FlashAudio.prototype.play = function(transport, autoPlay) {
 FlashAudio.prototype.share = function(transport, autoPlay, codec) {
     var url = transport.uri.replace("protocol",this.config.protocol);
     var peerID = "";
-    if (this.config.bridged == false && transport.peerID != undefined && this.config.cirrus != undefined) { 
+    if (this.config.bridged == false && transport.peerID != undefined && this.config.cirrus != undefined) {
         peerID = transport.peerID;
         Phono.log.info("Direct media share with peer " + transport.peerID);
     }
@@ -5408,7 +5408,7 @@ FlashAudio.prototype.share = function(transport, autoPlay, codec) {
     });
 
     return s;
-};   
+};
 
 // Returns an object containg JINGLE transport information
 FlashAudio.prototype.transport = function() {
@@ -5439,7 +5439,7 @@ FlashAudio.prototype.transport = function() {
                         callback();
                     }
                 }
-                
+
                 // Connect to cirrus, and once we get the good event, grab the nearID and continue
                 var connected = $flash.doCirrusConnect(cirrus);
                 Phono.log.info("doCirrusConnect");
@@ -5461,13 +5461,13 @@ FlashAudio.prototype.transport = function() {
             // If we have a Peer ID, and no other transport, fake one
             if (pID != undefined)
                 transport = {input: {uri: "rtmfp://invalid/invalid",
-                                     peerID: pID},   
+                                     peerID: pID},
                              output: {uri: "rtmfp://invalid/invalid",
                                       peerID: pID}
                             };
             t.find('candidate').each(function () {
                 transport = { input: {uri: $(this).attr('rtmpUri') + "/" + $(this).attr('playName'),
-                                      peerID: pID},   
+                                      peerID: pID},
                               output: {uri: $(this).attr('rtmpUri') + "/" + $(this).attr('publishName'),
                                        peerID: pID}
                             };
@@ -5500,12 +5500,12 @@ FlashAudio.prototype.codecs = function() {
 
 // Creates a DIV to hold the Flash movie if one was not specified by the user
 FlashAudio.prototype.createContainer = function(phono) {
-    
+
     var flashDiv = $("<div>")
       	.attr("id","_phono-audio-flash" + (FlashAudio.count++))
       	.addClass("phono_FlashHolder")
       	.appendTo("body");
-    
+
     flashDiv.css({
    	"width":"1px",
    	"height":"1px",
@@ -5517,9 +5517,9 @@ FlashAudio.prototype.createContainer = function(phono) {
    	"z-index":"10001",
    	"visibility":"visible"
     });
-    
+
     var containerId = $(flashDiv).attr("id");
-    
+
     Phono.events.bind(this, {
       	onPermissionBoxShow: function() {
 	    $("#"+containerId).css({
@@ -5534,10 +5534,10 @@ FlashAudio.prototype.createContainer = function(phono) {
 	    });
       	}
     });
-    
+
     return containerId;
-    
-};      
+
+};
 
 
 function JavaAudio(phono, config, callback) {
@@ -5548,24 +5548,24 @@ function JavaAudio(phono, config, callback) {
       this.config = Phono.util.extend({
           jar: "//s.phono.com/releases/" + Phono.version + "/plugins/audio/phono.audio.jar"
       }  , config);
-    
+
       // Bind Event Listeners
       Phono.events.bind(this, config);
-    
+
       var containerId = this.config.containerId;
-    
+
       // Create applet continer is user did not specify one
       if(!containerId) {
           this.config.containerId = containerId = _createContainer();
       }
-    
+
       var plugin = this;
-    
+
       // Install the applet
       plugin.$applet = _loadApplet(containerId, this.config.jar, callback, plugin);
       window.setInterval(function(){
         var str = "Loading...";
-        try { 
+        try {
          var json = plugin.$applet[0].getJSONStatus();
          if (json){
 	   var statusO = eval('(' +json+ ')');
@@ -5587,7 +5587,7 @@ function JavaAudio(phono, config, callback) {
                 str +=" error " +eps[0].error ;
                 Phono.log.debug("[JAVA RTP] "+str);
              }
-           } 
+           }
          } else {
           Phono.events.trigger(phono, "error", {
             reason: "Java applet did not load."
@@ -5600,7 +5600,7 @@ function JavaAudio(phono, config, callback) {
           });
           Phono.log.debug("[JAVA Load error] "+e);
         }
-      },25000); 
+      },25000);
     } else {
          Phono.events.trigger(phono, "error", {
             reason: "Java not available in this browser."
@@ -5648,7 +5648,7 @@ JavaAudio.prototype.play = function(transport, autoPlay) {
         stop: function() {
             player.stop();
         },
-        volume: function() { 
+        volume: function() {
             if(arguments.length === 0) {
    		return player.volume();
    	    }
@@ -5672,7 +5672,7 @@ JavaAudio.prototype.share = function(transport, autoPlay, codec, srtpPropsl, srt
         share = applet.share(url, acodec, autoPlay, srtpPropsl, srtpPropsr);
         isSecure = true;
     }
-    else { 
+    else {
         share = applet.share(url, acodec, autoPlay);
     }
     return {
@@ -5734,7 +5734,7 @@ JavaAudio.prototype.share = function(transport, autoPlay, codec, srtpPropsl, srt
             return isSecure;
         }
     }
-};   
+};
 
 // We always have java audio permission
 JavaAudio.prototype.permission = function() {
@@ -5745,7 +5745,7 @@ JavaAudio.prototype.permission = function() {
 JavaAudio.prototype.transport = function() {
     var applet = this.$applet[0];
     var endpoint = applet.allocateEndpoint();
-    
+
     return {
         name: "urn:xmpp:jingle:transports:raw-udp:1",
         description: "urn:xmpp:jingle:apps:rtp:1",
@@ -5775,7 +5775,7 @@ JavaAudio.prototype.codecs = function() {
     var result = new Array();
     var applet = this.$applet[0];
     var codecs = applet.codecs();
-    
+
     for (l=0; l<codecs.length; l++) {
         var name;
         if (codecs[l].name.startsWith("SPEEX")) {name = "SPEEX";}
@@ -5787,7 +5787,7 @@ JavaAudio.prototype.codecs = function() {
             p: codecs[l]
         });
     }
-    
+
     return result;
 };
 
@@ -5801,7 +5801,7 @@ JavaAudio.prototype.audioInDevices = function(){
 
     //var applet = this.$applet;
     //var jsonstr = applet.getAudioDeviceList();
-    
+
     //console.log("seeing this.audioDeviceList as "+this.audioDeviceList);
     var devs = eval ('(' +this.audioDeviceList+ ')');
     var mixers = devs.mixers;
@@ -5818,12 +5818,12 @@ JavaAudio.prototype.audioInDevices = function(){
 
 // Creates a DIV to hold the capture applet if one was not specified by the user
 _createContainer = function() {
-    
+
     var appletDiv = $("<div>")
         .attr("id","_phono-appletHolder" + (JavaAudio.count++))
         .addClass("phono_AppletHolder")
         .appendTo("body");
-    
+
     appletDiv.css({
         "width":"1px",
         "height":"1px",
@@ -5835,16 +5835,16 @@ _createContainer = function() {
         "z-index":"10001",
         "visibility":"visible"
     });
-    
+
     var containerId = $(appletDiv).attr("id");
     return containerId;
 }
 
 _loadApplet = function(containerId, jar, callback, plugin) {
     var id = "_phonoAudio" + (JavaAudio.count++);
-    
+
     var callbackName = id+"Callback";
-    
+
     window[callbackName] = function(devJson) {
             //console.log("Java audio device list json is "+devJson);
             plugin.audioDeviceList = devJson;
@@ -5870,15 +5870,15 @@ _loadApplet = function(containerId, jar, callback, plugin) {
     // Firefox 7.0.1 seems to treat the applet object as a function
     // which causes mayhem later on - so we return an array containing it
     // which seems to sheild us from issue.
-    return applet; 
+    return applet;
 };
 
 function PhonegapIOSAudio(phono, config, callback) {
     this.type = "phonegap-ios";
-    
+
     // Bind Event Listeners
     Phono.events.bind(this, config);
-    
+
     var plugin = this;
 
     this.initState(callback, plugin);
@@ -5893,9 +5893,9 @@ PhonegapIOSAudio.endpoint = "rtp://0.0.0.0";
 
 PhonegapIOSAudio.prototype.allocateEndpoint = function () {
     PhonegapIOSAudio.endpoint = "rtp://0.0.0.0";
-    PhoneGap.exec( 
+    PhoneGap.exec(
                   function(result) {console.log("endpoint success: " + result);
-                                                    PhonegapIOSAudio.endpoint = result;}, 
+                                                    PhonegapIOSAudio.endpoint = result;},
                   function(result) {console.log("endpoint fail:" + result);},
                   "Phono","allocateEndpoint",[]);
 }
@@ -5903,7 +5903,7 @@ PhonegapIOSAudio.prototype.allocateEndpoint = function () {
 PhonegapIOSAudio.prototype.initState = function(callback, plugin) {
 
     this.allocateEndpoint();
-    PhoneGap.exec( 
+    PhoneGap.exec(
                   function(result) {
                       console.log("codec success: " + result);
                       var codecs = $.parseJSON(result);
@@ -5918,10 +5918,10 @@ PhonegapIOSAudio.prototype.initState = function(callback, plugin) {
                               p: codecs[l]
                           });
                       };
-                      
+
                       // We are done with initialisation
                       callback(plugin);
-                  }, 
+                  },
                   function(result) {console.log("codec fail:" + result);},
                   "Phono","codecs",[]
                  );
@@ -5950,7 +5950,7 @@ PhonegapIOSAudio.prototype.play = function(transport, autoPlay) {
 
     // Get PhoneGap to create the play
     console.log("play("+luri+","+autoPlay+")");
-    PhoneGap.exec( 
+    PhoneGap.exec(
                   function(result) {console.log("play success: " + result);},
                   function(result) {console.log("play fail:" + result);},
                   "Phono","play",
@@ -5966,7 +5966,7 @@ PhonegapIOSAudio.prototype.play = function(transport, autoPlay) {
         },
         start: function() {
             console.log("play.start " + luri);
-            PhoneGap.exec( 
+            PhoneGap.exec(
                           function(result) {console.log("start success: " + result);},
                           function(result) {console.log("start fail:" + result);},
                           "Phono","start",
@@ -5978,14 +5978,14 @@ PhonegapIOSAudio.prototype.play = function(transport, autoPlay) {
             PhoneGap.exec(
                           function(result) {console.log("stop success: " + result);},
                           function(result) {console.log("stop fail:" + result);},
-                          "Phono","stop", 
+                          "Phono","stop",
                           [{
                               'uri':luri
                           }]);
         },
-        volume: function() { 
+        volume: function() {
             if(arguments.length === 0) {
-                
+
    	    }
    	    else {
    	    }
@@ -5999,7 +5999,7 @@ PhonegapIOSAudio.prototype.share = function(transport, autoPlay, codec, srtpProp
     var url = transport.uri;
     var codecD = ""+codec.name+":"+codec.rate+":"+codec.id;
     // Get PhoneGap to create the share
-    var pgprops;  
+    var pgprops;
     var isSecure = false;
     if (srtpPropsl != undefined && srtpPropsr != undefined) {
        pgprops = [{
@@ -6017,7 +6017,7 @@ PhonegapIOSAudio.prototype.share = function(transport, autoPlay, codec, srtpProp
                       'codec':codecD
                   }];
     }
-    PhoneGap.exec( 
+    PhoneGap.exec(
                   function(result) {console.log("share success: " + result);},
                   function(result) {console.log("share fail:" + result);},
                   "Phono","share",pgprops);
@@ -6045,7 +6045,7 @@ PhonegapIOSAudio.prototype.share = function(transport, autoPlay, codec, srtpProp
         // Control
         start: function() {
             console.log("share.start " + luri);
-            PhoneGap.exec( 
+            PhoneGap.exec(
                           function(result) {console.log("start success: " + result);},
                           function(result) {console.log("start fail:" + result);},
                           "Phono","start",
@@ -6057,7 +6057,7 @@ PhonegapIOSAudio.prototype.share = function(transport, autoPlay, codec, srtpProp
             PhoneGap.exec(
                           function(result) {console.log("stop success: " + result);},
                           function(result) {console.log("stop fail:" + result);},
-                          "Phono","stop", 
+                          "Phono","stop",
                           [{
                               'uri':luri
                           }]);
@@ -6066,7 +6066,7 @@ PhonegapIOSAudio.prototype.share = function(transport, autoPlay, codec, srtpProp
             PhoneGap.exec(
                           function(result) {console.log("digit success: " + result);},
                           function(result) {console.log("digit fail:" + result);},
-                          "Phono","digit", 
+                          "Phono","digit",
                           [{
                               'uri':luri,
                               'digit':value,
@@ -6081,7 +6081,7 @@ PhonegapIOSAudio.prototype.share = function(transport, autoPlay, codec, srtpProp
                 return gainValue;
    	    }
    	    else {
-                PhoneGap.exec( 
+                PhoneGap.exec(
                               function(result) {
                                   console.log("gain success: " + result + " " + value);
                                   gainValue = value;
@@ -6100,7 +6100,7 @@ PhonegapIOSAudio.prototype.share = function(transport, autoPlay, codec, srtpProp
                 return muteStatus;
    	    }
    	    else {
-                PhoneGap.exec( 
+                PhoneGap.exec(
                               function(result) {
                                   console.log("mute success: " + result + " " + value);
                                   muteStatus = value;
@@ -6141,8 +6141,8 @@ PhonegapIOSAudio.prototype.share = function(transport, autoPlay, codec, srtpProp
             return isSecure;
         }
    };
-    
-};   
+
+};
 
 // We always have phonegap audio permission
 PhonegapIOSAudio.prototype.permission = function() {
@@ -6151,7 +6151,7 @@ PhonegapIOSAudio.prototype.permission = function() {
 
 // Returns an object containg JINGLE transport information
 PhonegapIOSAudio.prototype.transport = function() {
-    
+
     var endpoint = PhonegapIOSAudio.endpoint;
     // We've used this one, get another ready
     this.allocateEndpoint();
@@ -6191,7 +6191,7 @@ PhonegapIOSAudio.prototype.codecs = function() {
 
 function PhonegapAndroidAudio(phono, config, callback) {
     this.type = "phonegap-android";
-    
+
     // Bind Event Listeners
     Phono.events.bind(this, config);
 
@@ -6199,7 +6199,7 @@ function PhonegapAndroidAudio(phono, config, callback) {
 
     // Register our Java plugin with Phonegap so that we can call it later
     PhoneGap.exec(null, null, "App", "addService", ['PhonogapAudio', 'com.phono.android.phonegap.Phono']);
-    
+
     // FIXME: Should not have to do this twice!
     this.allocateEndpoint();
     this.initState(callback, plugin);
@@ -6213,16 +6213,16 @@ PhonegapAndroidAudio.codecs = new Array();
 PhonegapAndroidAudio.endpoint = "rtp://0.0.0.0";
 
 PhonegapAndroidAudio.prototype.allocateEndpoint = function () {
-    
+
     PhonegapAndroidAudio.endpoint = "rtp://0.0.0.0";
 
     PhoneGap.exec(function(result) {console.log("endpoint: success");
                                     PhonegapAndroidAudio.endpoint = result.uri;
                                    },
                   function(result) {console.log("endpoint: fail");},
-                  "PhonogapAudio",  
-                  "allocateEndpoint",              
-                  [{}]);      
+                  "PhonogapAudio",
+                  "allocateEndpoint",
+                  [{}]);
 }
 
 PhonegapAndroidAudio.prototype.initState = function(callback, plugin) {
@@ -6246,11 +6246,11 @@ PhonegapAndroidAudio.prototype.initState = function(callback, plugin) {
         // We are done with initialisation
         callback(plugin);
     }
-    
+
     var codecFail = function(result) {
         console.log("codec:fail");
     }
-    
+
     // Get the codec list
     PhoneGap.exec(codecSuccess,
                   codecFail,
@@ -6283,12 +6283,12 @@ PhonegapAndroidAudio.prototype.play = function(transport, autoPlay) {
     // Get PhoneGap to create the play
     PhoneGap.exec(function(result) {console.log("play: success");},
                   function(result) {console.log("play: fail");},
-                  "PhonogapAudio",  
-                  "play",              
+                  "PhonogapAudio",
+                  "play",
                   [{
                       'uri':luri,
                       'autoplay': autoPlay == true ? "YES":"NO"
-                  }]);      
+                  }]);
 
     return {
         url: function() {
@@ -6298,26 +6298,26 @@ PhonegapAndroidAudio.prototype.play = function(transport, autoPlay) {
             console.log("play.start " + luri);
             PhoneGap.exec(function(result) {console.log("start: success");},
                   function(result) {console.log("start: fail");},
-                  "PhonogapAudio",  
-                  "start",              
+                  "PhonogapAudio",
+                  "start",
                   [{
                       'uri':luri
-                  }]);   
+                  }]);
         },
         stop: function() {
             console.log("play.stop " + luri);
             PhoneGap.exec(function(result) {console.log("stop: success");},
                   function(result) {console.log("stop: fail");},
-                  "PhonogapAudio",  
-                  "stop",              
+                  "PhonogapAudio",
+                  "stop",
                   [{
                       'uri':luri
-                  }]);   
+                  }]);
 
         },
-        volume: function() { 
+        volume: function() {
             if(arguments.length === 0) {
-                
+
    	    }
    	    else {
    	    }
@@ -6351,10 +6351,10 @@ PhonegapAndroidAudio.prototype.share = function(transport, autoPlay, codec, srtp
     // Get PhoneGap to create the share
     PhoneGap.exec(function(result) {console.log("share: success");},
                   function(result) {console.log("share: fail");},
-                  "PhonogapAudio",  
-                  "share",              
+                  "PhonogapAudio",
+                  "share",
                   pgprops
-                  );   
+                  );
 
     var luri = Phono.util.localUri(url);
     var muteStatus = false;
@@ -6382,34 +6382,34 @@ PhonegapAndroidAudio.prototype.share = function(transport, autoPlay, codec, srtp
             console.log("share.start " + luri);
             PhoneGap.exec(function(result) {console.log("start: success");},
                           function(result) {console.log("start: fail");},
-                          "PhonogapAudio",  
-                          "start",              
+                          "PhonogapAudio",
+                          "start",
                           [{
                               'uri':luri
-                          }]);   
+                          }]);
         },
         stop: function() {
             console.log("share.stop " + luri);
             PhoneGap.exec(function(result) {console.log("stop: success");},
                           function(result) {console.log("stop: fail");},
-                          "PhonogapAudio",  
-                          "stop",              
+                          "PhonogapAudio",
+                          "stop",
                           [{
                               'uri':luri
-                          }]);   
+                          }]);
         },
         digit: function(value, duration, audible) {
             console.log("share.digit " + luri);
             PhoneGap.exec(function(result) {console.log("digit: success");},
                           function(result) {console.log("digit: fail");},
-                          "PhonogapAudio",  
-                          "digit",              
+                          "PhonogapAudio",
+                          "digit",
                           [{
                               'uri':luri,
                               'digit':value,
                               'duration':duration,
                               'audible':audible == true ? "YES":"NO"
-                          }]);   
+                          }]);
         },
         // Properties
         gain: function(value) {
@@ -6420,12 +6420,12 @@ PhonegapAndroidAudio.prototype.share = function(transport, autoPlay, codec, srtp
                 console.log("share.gain " + luri);
                 PhoneGap.exec(function(result) {console.log("gain: success");},
                               function(result) {console.log("gain: fail");},
-                              "PhonogapAudio",  
-                              "gain",              
+                              "PhonogapAudio",
+                              "gain",
                               [{
                                   'uri':luri,
                                   'value':value
-                              }]);   
+                              }]);
    	    }
         },
         mute: function(value) {
@@ -6436,12 +6436,12 @@ PhonegapAndroidAudio.prototype.share = function(transport, autoPlay, codec, srtp
                 console.log("share.mute " + luri);
                 PhoneGap.exec(function(result) {console.log("mute: success");},
                               function(result) {console.log("mute: fail");},
-                              "PhonogapAudio",  
-                              "mute",              
+                              "PhonogapAudio",
+                              "mute",
                               [{
                                   'uri':luri,
                                   'value':value == true ? "YES":"NO"
-                              }]);   
+                              }]);
    	    }
         },
         suppress: function(value) {
@@ -6457,7 +6457,7 @@ PhonegapAndroidAudio.prototype.share = function(transport, autoPlay, codec, srtp
                             var en = $.parseJSON(result);
                             if(en != null) {
                               micEnergy = Math.floor(Math.max((Math.LOG2E * Math.log(en.mic)-4.0),0.0));
-                              spkEnergy = Math.floor(Math.max((Math.LOG2E * Math.log(en.spk)-4.0),0.0)); 
+                              spkEnergy = Math.floor(Math.max((Math.LOG2E * Math.log(en.spk)-4.0),0.0));
 			    }
                           },
                         function(result) {console.log("energy fail:" + result);},
@@ -6473,7 +6473,7 @@ PhonegapAndroidAudio.prototype.share = function(transport, autoPlay, codec, srtp
             return isSecure;
         }
     };
-};   
+};
 
 // We always have phonegap audio permission
 PhonegapAndroidAudio.prototype.permission = function() {
@@ -6482,7 +6482,7 @@ PhonegapAndroidAudio.prototype.permission = function() {
 
 // Returns an object containg JINGLE transport information
 PhonegapAndroidAudio.prototype.transport = function() {
-    
+
     var endpoint = PhonegapAndroidAudio.endpoint;
     // We've used this one, get another ready
     this.allocateEndpoint();
@@ -6586,7 +6586,7 @@ function JSEPAudio(phono, config, callback) {
               if(this.crypto) {delete this.crypto;};
 	      //if(this.ssrc) { delete this.ssrc;};
 	      //if(this.mid) { delete this.mid;};
-           }); 
+           });
            //if (sdpObj.group) {delete sdpObj.group;};
 	   return sdpObj;
         };
@@ -6606,9 +6606,9 @@ function JSEPAudio(phono, config, callback) {
             video:false
         }
     }, config);
-    
+
     var plugin = this;
-    
+
     var localContainerId = this.config.localContainerId;
 
     // Create audio continer if user did not specify one
@@ -6664,16 +6664,16 @@ JSEPAudio.prototype.play = function(transport, autoPlay) {
     if (transport.uri) {
         url = JSEPAudio.AudioUrl(transport.uri);
     }
-    
+
     return {
         url: function() {
             return url;
         },
         start: function() {
             if (url) {
-                audioPlayer = new Audio(url); 
+                audioPlayer = new Audio(url);
                 var loop = function() {
-                    audioPlayer = new Audio(url); 
+                    audioPlayer = new Audio(url);
                     audioPlayer.play();
                     audioPlayer.addEventListener('ended', loop);
                 }
@@ -6773,19 +6773,19 @@ JSEPAudio.prototype.share = function(transport, autoPlay, codec) {
                         }
                     }
                 });
-            } 
+            }
             return {
                 mic: JSEPAudio.mic,
                 spk: JSEPAudio.spk
             };
-            
+
         },
         secure: function() {
             return true;
         },
         freep: function(value, duration, audible) {
-            if (audible){ 
-                var context = JSEPAudio.webAudioContext; 
+            if (audible){
+                var context = JSEPAudio.webAudioContext;
                 if (context){
                     var note1;
                     var note2;
@@ -6794,7 +6794,7 @@ JSEPAudio.prototype.share = function(transport, autoPlay, codec) {
                     note2 = context.createOscillator();
                     note1.connect(context.destination);
                     note2.connect(context.destination);
-    
+
                     var twoTone = JSEPAudio.toneMap[value];
                     note1.frequency.value = twoTone[0];
                     note2.frequency.value = twoTone[1];
@@ -6809,7 +6809,7 @@ JSEPAudio.prototype.share = function(transport, autoPlay, codec) {
             }
         }
     };
-};   
+};
 
 JSEPAudio.prototype.showPermissionBox = function(callback) {
     Phono.log.info("Requesting access to local media");
@@ -6882,12 +6882,12 @@ JSEPAudio.prototype.transport = function(config) {
     return {
         name: "urn:xmpp:jingle:transports:ice-udp:1",
         buildTransport: function(direction, j, callback, u, updateCallback) {
-            
+
             pc = JSEPAudio.mkPeerConnection(configuration,peerconstraints);
             JSEPAudio.pc = pc;
 	    var oic = function(evt) {
                 if (!complete) {
-                    if ((evt.candidate == null) || 
+                    if ((evt.candidate == null) ||
                         (candidateCount >= 1 && !audio.config.media['video'] && direction == "answer")) {
                         Phono.log.info("All Ice candidates in ");
                         complete = true;
@@ -6898,7 +6898,7 @@ JSEPAudio.prototype.transport = function(config) {
                         Phono.sdp.buildJingle(j, sdpObj);
                         var codecId = 0;
                         if (sdpObj.contents[0].codecs[0].name == "telephone-event") codecId = 1;
-                        var codec = 
+                        var codec =
                             {
                             id: sdpObj.contents[0].codecs[codecId].id,
                             name: sdpObj.contents[0].codecs[codecId].name,
@@ -6934,7 +6934,7 @@ JSEPAudio.prototype.transport = function(config) {
 		var setlok = function(){
                     Phono.log.info('setlocal ok');
                 };
-                
+
                 var cb = function(localDesc) {
                     var sd = JSEPAudio.mkSessionDescription(localDesc);
                     pc.setLocalDescription(sd,setlok,setlfail);
@@ -6947,7 +6947,7 @@ JSEPAudio.prototype.transport = function(config) {
 		var ansfail = function(){
                     Phono.log.error('failed to create answer');
                 };
-                
+
                 if (direction == "answer") {
                     Phono.log.info('Set remote description ' + JSON.stringify(inboundOffer));
                     pc.setRemoteDescription(inboundOffer,
@@ -6963,7 +6963,7 @@ JSEPAudio.prototype.transport = function(config) {
                     pc.createOffer(cb , offerfail, offerconstraints);
                 }
             }
-            
+
             if (audio.permission()) {
                 cb2();
             } else {
@@ -6978,7 +6978,7 @@ JSEPAudio.prototype.transport = function(config) {
             Phono.log.info('constructed remote sdp ' + JSON.stringify(sdp));
             var codecId = 0;
             if (sdpObj.contents[0].codecs[0].name == "telephone-event") codecId = 1;
-            var codec = 
+            var codec =
                 {
                 id: sdpObj.contents[0].codecs[codecId].id,
                 name: sdpObj.contents[0].codecs[codecId].name,
@@ -7000,7 +7000,7 @@ JSEPAudio.prototype.transport = function(config) {
                 function(){
                     Phono.log.error("remoteDescription sad")
                 });
-                
+
             } else {
                 // We are an offer for an inbound call
 	        Phono.log.info('Got remote description ' + JSON.stringify(sdp));
@@ -7050,28 +7050,28 @@ JSEPAudio.prototype.createContainer = function() {
     .attr("autoplay","autoplay")
     .appendTo("body");
 
-    var containerId = $(webRTC).attr("id");       
+    var containerId = $(webRTC).attr("id");
     return containerId;
-};      
+};
 
 
     Phono.registerPlugin("audio", {
-        
+
         create: function(phono, config, callback) {
             config = Phono.util.extend({
                 type: "auto"
             }, config);
-            
+
             // What are we going to create? Look at the config...
             if (config.type === "java") {
-                return Phono.util.loggify("JavaAudio", new JavaAudio(phono, config, callback));                
-                
+                return Phono.util.loggify("JavaAudio", new JavaAudio(phono, config, callback));
+
             } else if (config.type === "phonegap-ios") {
                 return Phono.util.loggify("PhonegapIOSAudio", new PhonegapIOSAudio(phono, config, callback));
-                
+
             } else if (config.type === "phonegap-android") {
                 return Phono.util.loggify("PhonegapAndroidAudio", new PhonegapAndroidAudio(phono, config, callback));
-                
+
             } else if (config.type === "flash") {
                 return Phono.util.loggify("FlashAudio", new FlashAudio(phono, config, callback));
 
@@ -7081,29 +7081,29 @@ JSEPAudio.prototype.createContainer = function() {
             } else if (config.type === "none") {
                 window.setTimeout(callback,10);
                 return null;
-                
+
             } else if (config.type === "auto") {
-                
+
                 Phono.log.info("Detecting Audio Plugin");
 
                 if (JSEPAudio.exists()) {
-                    Phono.log.info("Detected JSEP browser"); 
+                    Phono.log.info("Detected JSEP browser");
                     return Phono.util.loggify("JSEPAudio", new JSEPAudio(phono, config, callback));
-                } else if (PhonegapIOSAudio.exists())  { 
-                    Phono.log.info("Detected iOS"); 
+                } else if (PhonegapIOSAudio.exists())  {
+                    Phono.log.info("Detected iOS");
                     return Phono.util.loggify("PhonegapIOSAudio", new PhonegapIOSAudio(phono, config, callback));
-                } else if (PhonegapAndroidAudio.exists()) { 
-                    Phono.log.info("Detected Android"); 
+                } else if (PhonegapAndroidAudio.exists()) {
+                    Phono.log.info("Detected Android");
                     return Phono.util.loggify("PhonegapAndroidAudio", new PhonegapAndroidAudio(phono, config, callback));
-                } else { 
-                    Phono.log.info("Using Flash default"); 
+                } else {
+                    Phono.log.info("Using Flash default");
                     return Phono.util.loggify("FlashAudio", new FlashAudio(phono, config, callback));
-                    
+
                 }
             }
         }
     });
-      
+
 })();
 ;(function() {
 
@@ -7112,25 +7112,25 @@ JSEPAudio.prototype.createContainer = function() {
       this.body = null;
       this.connection = connection;
    };
-   
+
    Message.prototype.reply = function(body) {
       this.connection.send(Strophe.msg({to:this.from, type:"chat"}).c("body").t(body));
    };
 
    function StropheMessaging(phono, config, callback) {
-      
+
       this.connection = phono.connection;
-      
+
       this.connection.addHandler(
-         this.handleMessage.bind(this), 
+         this.handleMessage.bind(this),
          null, "message", "chat"
       );
-      
+
       Phono.events.bind(this, config);
-      
+
       callback(this);
    };
-   
+
    StropheMessaging.prototype.send = function(to, body) {
       this.connection.send(Strophe.msg({to:to, type:"chat"}).c("body").t(body));
    };
@@ -7144,13 +7144,13 @@ JSEPAudio.prototype.createContainer = function() {
       }, [message]);
       return true;
    };
-   
+
    Phono.registerPlugin("messaging", {
       create: function(phono, config, callback) {
          return new StropheMessaging(phono, config, callback);
       }
    });
-      
+
 })();
 
 ;(function() {
@@ -7331,7 +7331,7 @@ JSEPAudio.prototype.createContainer = function() {
     _buildCandidate = function(candidateObj, iceObj) {
         var c = candidateObj;
         var sdp = "a=candidate:" + c.foundation + " " +
-            c.component + " " + 
+            c.component + " " +
             c.protocol.toUpperCase() + " " +
             c.priority + " " +
             c.ip + " " +
@@ -7357,7 +7357,7 @@ JSEPAudio.prototype.createContainer = function() {
     }
 
     _buildCodec = function(codecObj) {
-        var sdp = "a=rtpmap:" + codecObj.id + " " + codecObj.name + "/" + codecObj.clockrate 
+        var sdp = "a=rtpmap:" + codecObj.id + " " + codecObj.name + "/" + codecObj.clockrate
         if (codecObj.channels){
             sdp+="/"+codecObj.channels;
         }
@@ -7375,7 +7375,7 @@ JSEPAudio.prototype.createContainer = function() {
     }
 
     _buildCrypto = function(cryptoObj) {
-        var sdp = "a=crypto:" + cryptoObj.tag + " " + cryptoObj['crypto-suite'] + " " + 
+        var sdp = "a=crypto:" + cryptoObj.tag + " " + cryptoObj['crypto-suite'] + " " +
             cryptoObj["key-params"] + "\r\n";
         return sdp;
     }
@@ -7419,18 +7419,18 @@ JSEPAudio.prototype.createContainer = function() {
             mi = mi + 1;
         }
         sdp = sdp + "\r\n";
-        
+
         if (sdpObj.connection) {
             sdp = sdp + "c=" + sdpObj.connection.nettype + " " + sdpObj.connection.addrtype + " " +
                 sdpObj.connection.address + "\r\n";
         }
-        
+
         if (sdpObj.mid) {
             sdp = sdp + "a=mid:" + sdpObj.mid + "\r\n";
         }
 
         if (sdpObj.rtcp) {
-            sdp = sdp + "a=rtcp:" + sdpObj.rtcp.port + " " + sdpObj.rtcp.nettype + " " + 
+            sdp = sdp + "a=rtcp:" + sdpObj.rtcp.port + " " + sdpObj.rtcp.nettype + " " +
                 sdpObj.rtcp.addrtype + " " +
                 sdpObj.rtcp.address + "\r\n";
         }
@@ -7463,15 +7463,15 @@ JSEPAudio.prototype.createContainer = function() {
 
         if (sdpObj['rtcp-mux']) {
             sdp = sdp + "a=rtcp-mux" + "\r\n";
-        } 
- 
+        }
+
         if (sdpObj.crypto) {
             sdp = sdp + _buildCrypto(sdpObj.crypto);
         }
         if (sdpObj.fingerprint) {
             sdp = sdp + _buildFingerprint(sdpObj.fingerprint);
         }
- 
+
         var cdi = 0;
         while (cdi + 1 <= sdpObj.codecs.length) {
             sdp = sdp + _buildCodec(sdpObj.codecs[cdi]);
@@ -7513,7 +7513,7 @@ JSEPAudio.prototype.createContainer = function() {
 
             Phono.util.each(blob.contents, function () {
                 var sdpObj = this;
-                
+
                 var desc = {xmlns:description,
                             media:sdpObj.media.type};
 
@@ -7534,13 +7534,13 @@ JSEPAudio.prototype.createContainer = function() {
 
                 c = c.c('content', {creator:"initiator"})
                 .c('description', desc);
-                
+
                 Phono.util.each(sdpObj.codecs, function() {
-                    c = c.c('payload-type', this).up();           
+                    c = c.c('payload-type', this).up();
                 });
-                
+
                 if (sdpObj.crypto) {
-                    c = c.c('encryption', {required: '1'}).c('crypto', sdpObj.crypto).up();    
+                    c = c.c('encryption', {required: '1'}).c('crypto', sdpObj.crypto).up();
                     c = c.up();
                 }
 
@@ -7577,10 +7577,10 @@ JSEPAudio.prototype.createContainer = function() {
                 }
 	        c = c.c('transport',transp);
                 Phono.util.each(sdpObj.candidates, function() {
-                    c = c.c('candidate', this).up();           
+                    c = c.c('candidate', this).up();
                 });
 		// two places to find the fingerprint
-		// media 
+		// media
 		// session
 		var fp = null;
 		if (sdpObj.fingerprint) {
@@ -7599,7 +7599,7 @@ JSEPAudio.prototype.createContainer = function() {
             });
             return c;
         },
-        
+
         // jingle: Some Jingle to parse
         // Returns a js object representing the SDP
         parseJingle: function(jingle) {
@@ -7616,7 +7616,7 @@ JSEPAudio.prototype.createContainer = function() {
                 var sdpObj = {};
                 var mediaObj = {};
                 mediaObj.pts = [];
-                
+
                 blobObj.contents.push(sdpObj);
                 sdpObj.candidates = [];
                 sdpObj.codecs = [];
@@ -7685,7 +7685,7 @@ JSEPAudio.prototype.createContainer = function() {
                                 sdpObj.rtcp.nettype = "IN";
                             }
                         });
-                    } 
+                    }
                     if ($(this).attr('xmlns') == "urn:xmpp:jingle:transports:ice-udp:1") {
                         sdpObj.ice.pwd = $(this).attr('pwd');
                         sdpObj.ice.ufrag = $(this).attr('ufrag');
@@ -7702,7 +7702,7 @@ JSEPAudio.prototype.createContainer = function() {
             });
             return blobObj;
         },
-        
+
         dumpSDP: function(sdpString) {
             var sdpLines = sdpString.split("\r\n");
             for (var sdpLine in sdpLines) {
@@ -7729,7 +7729,7 @@ JSEPAudio.prototype.createContainer = function() {
 		    sdpObj = contentsObj.session;
                 }
                 if (line.type == "m") {
-                    // New m-line, 
+                    // New m-line,
                     // create a new content
                     var media = _parseM(line.contents);
                     sdpObj = {};
@@ -7810,30 +7810,30 @@ JSEPAudio.prototype.createContainer = function() {
             }
             return contentsObj;
         },
-        
+
         // sdp: an object representing the body
-        // Return a text string in SDP format  
+        // Return a text string in SDP format
         buildSDP: function(contentsObj) {
             // Write some constant stuff
             var session = contentsObj.session;
-            var sdp = 
+            var sdp =
                 "v=0\r\n";
             if (contentsObj.session) {
                 var session = contentsObj.session;
-                sdp = sdp + "o=" + session.username + " " + session.id + " " + session.ver + " " + 
-                session.nettype + " " + session.addrtype + " " + session.address + "\r\n"; 
+                sdp = sdp + "o=" + session.username + " " + session.id + " " + session.ver + " " +
+                session.nettype + " " + session.addrtype + " " + session.address + "\r\n";
             } else {
                 var id = new Date().getTime();
                 var ver = 2;
                 sdp = sdp + "o=-" + " 3" + id + " " + ver + " IN IP4 192.67.4.14" + "\r\n"; // does the IP here matter ?!?
             }
 
-            sdp = sdp + "s=-\r\n" + 
+            sdp = sdp + "s=-\r\n" +
                 "t=0 0\r\n";
 
             if (contentsObj.connection) {
                 var connection = contentsObj.connection;
-                sdp = sdp + "c=" + connection.nettype + " " + connection.addrtype + 
+                sdp = sdp + "c=" + connection.nettype + " " + connection.addrtype +
                     " " + connection.address + "\r\n";
             }
             if (contentsObj.group) {
@@ -7866,7 +7866,7 @@ JSEPAudio.prototype.createContainer = function() {
             var line = _parseLine(candidateSDP);
             return _parseCandidate(line.contents);
         },
-        
+
         // candidate: an object representing the body
         // Return a text string in SDP format
         buildCandidate: function(candidateObj) {
@@ -7883,7 +7883,7 @@ JSEPAudio.prototype.createContainer = function() {
 	chromeAudio:"v=0\r\no=- 2751679977 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=group:BUNDLE audio\r\na=msid-semantic: WMS YyMaveYaWtkfdWeZtSHs3AHFuH4TEYh4MZDh\r\nm=audio 63231 RTP/SAVPF 111 103 104 0 8 107 106 105 13 126\r\nc=IN IP4 192.67.4.11\r\na=rtcp:63231 IN IP4 192.67.4.11\r\na=candidate:521808905 1 udp 2113937151 192.67.4.11 63231 typ host generation 0\r\na=candidate:521808905 2 udp 2113937151 192.67.4.11 63231 typ host generation 0\r\na=ice-ufrag:1VZUXywcfSTmvPBK\r\na=ice-pwd:NHrjWPuvIlyBQD7UVw4zi/4F\r\na=ice-options:google-ice\r\na=fingerprint:sha-256 49:1E:A3:EB:78:C2:89:55:5D:0D:6E:F2:B7:41:50:DB:10:C4:B2:54:8F:D8:24:A5:E8:56:0A:56:F4:BA:3A:ED\r\na=extmap:1 urn:ietf:params:rtp-hdrext:ssrc-audio-level\r\na=sendrecv\r\na=mid:audio\r\na=rtcp-mux\r\na=crypto:0 AES_CM_128_HMAC_SHA1_32 inline:MpqMpDpEDjNDfpquFL8jIkO9oLp2Dp4NOYiSmrea\r\na=crypto:1 AES_CM_128_HMAC_SHA1_80 inline:/yAvMdC0p1e/4c/Jc6ljepmHpIuHV9jO3FyrrTX4\r\na=rtpmap:111 opus/48000/2\r\na=fmtp:111 minptime=10\r\na=rtpmap:103 ISAC/16000\r\na=rtpmap:104 ISAC/32000\r\na=rtpmap:0 PCMU/8000\r\na=rtpmap:8 PCMA/8000\r\na=rtpmap:107 CN/48000\r\na=rtpmap:106 CN/32000\r\na=rtpmap:105 CN/16000\r\na=rtpmap:13 CN/8000\r\na=rtpmap:126 telephone-event/8000\r\na=maxptime:60\r\na=ssrc:3334051080 cname:ECpt57S24HzaX1WY\r\na=ssrc:3334051080 msid:YyMaveYaWtkfdWeZtSHs3AHFuH4TEYh4MZDh YyMaveYaWtkfdWeZtSHs3AHFuH4TEYh4MZDha0\r\na=ssrc:3334051080 mslabel:YyMaveYaWtkfdWeZtSHs3AHFuH4TEYh4MZDh\r\na=ssrc:3334051080 label:YyMaveYaWtkfdWeZtSHs3AHFuH4TEYh4MZDha0\r\n",
 
 	firefoxVideo:"v=0\r\no=Mozilla-SIPUA-24.0a1 12643 0 IN IP4 0.0.0.0\r\ns=SIP Call\r\nt=0 0\r\na=ice-ufrag:1a870bf3\r\na=ice-pwd:948d30c7fe15b95a7bd63743ae84ac2e\r\na=fingerprint:sha-256 1C:D2:EC:A0:51:89:35:BE:84:4B:BC:11:F3:D4:D6:C7:F7:39:52:C5:2D:55:88:1D:61:24:7A:54:20:8A:AE:C2\r\nm=audio 50859 RTP/SAVPF 109 0 8 101\r\nc=IN IP4 192.67.4.11\r\na=rtpmap:109 opus/48000/2\r\na=ptime:20\r\na=rtpmap:0 PCMU/8000\r\na=rtpmap:8 PCMA/8000\r\na=rtpmap:101 telephone-event/8000\r\na=fmtp:101 0-15\r\na=sendrecv\r\na=candidate:0 1 UDP 2113601791 192.67.4.11 50859 typ host\r\na=candidate:0 2 UDP 2113601790 192.67.4.11 53847 typ host\r\nm=video 62311 RTP/SAVPF 120\r\nc=IN IP4 192.67.4.11\r\na=rtpmap:120 VP8/90000\r\na=sendrecv\r\na=candidate:0 1 UDP 2113601791 192.67.4.11 62311 typ host\r\na=candidate:0 2 UDP 2113601790 192.67.4.11 54437 typ host\r\n",
-        
+
 
 	firefoxAudio:"v=0\r\no=Mozilla-SIPUA-24.0a1 20557 0 IN IP4 0.0.0.0\r\ns=SIP Call\r\nt=0 0\r\na=ice-ufrag:66600851\r\na=ice-pwd:aab7c3c8d881f6406eff1f1ff2e3bc5e\r\na=fingerprint:sha-256 C3:C4:98:95:D0:58:B1:D2:F9:72:A0:44:EB:C7:C4:49:95:8F:EE:00:05:10:82:A8:6E:F6:4A:DF:43:A3:2A:16\r\nm=audio 56026 RTP/SAVPF 109 0 8 101\r\nc=IN IP4 192.67.4.11\r\na=rtpmap:109 opus/48000/2\r\na=ptime:20\r\na=rtpmap:0 PCMU/8000\r\na=rtpmap:8 PCMA/8000\r\na=rtpmap:101 telephone-event/8000\r\na=fmtp:101 0-15\r\na=sendrecv\r\na=candidate:0 1 UDP 2113601791 192.67.4.11 56026 typ host\r\na=candidate:0 2 UDP 2113601790 192.67.4.11 56833 typ host\r\n",
 
@@ -7891,7 +7891,7 @@ JSEPAudio.prototype.createContainer = function() {
 
         for (s in SDP){
 		var bro = s;
-                var bs = SDP[s];	
+                var bs = SDP[s];
 		Phono.log.debug("testing "+ s);
 		var sdpObj = Phono.sdp.parseSDP(bs);
 		Phono.log.debug(JSON.stringify(sdpObj,null," "));
@@ -7902,8 +7902,8 @@ JSEPAudio.prototype.createContainer = function() {
         }
 
     }
-    
-}()); 
+
+}());
 
 ;(function() {
 
@@ -7924,24 +7924,24 @@ JSEPAudio.prototype.createContainer = function() {
        OUTBOUND: 0,
        INBOUND: 1
    };
-   
+
    // Call
    //
    // A Call is the central object in the Phone API. Calls are started
    // using the Phone's dial function or by answering an incoming call.
    // =================================================================
-   
+
    function Call(phone, id, direction, config) {
 
       var call = this;
-      
+
       // TODO: move out to factory method
       this.phone = phone;
       this.phono = phone.phono;
       this.audioLayer = this.phono.audio;
       this.transport = this.audioLayer.transport(config);
       this.connection = this.phono.connection;
-      
+
       this.config = Phono.util.extend({
          pushToTalk: false,
          mute: false,
@@ -7953,17 +7953,17 @@ JSEPAudio.prototype.createContainer = function() {
          codecs: phone.config.codecs,
          security: phone._security
       }, config);
-      
+
       // Apply config
       Phono.util.each(this.config, function(k,v) {
          if(typeof call[k] == "function") {
             call[k](v);
          }
       });
-            
+
       this.id = id;
       this.direction = direction;
-      this.state = CallState.INITIAL;  
+      this.state = CallState.INITIAL;
       this.remoteJid = null;
       this.initiator = null;
       this.codec = null;
@@ -7978,22 +7978,22 @@ JSEPAudio.prototype.createContainer = function() {
           this.keyparams = "inline:" + Phono.util.genKey(30);
           this.srtpPropsl = Phono.util.srtpProps(this.tag, this.crypto, this.keyparams);
       }
-       
+
       this.headers = [];
-      
+
       if(this.config.headers) {
          this.headers = this.config.headers;
       }
-      
+
       // Bind Event Listeners
       Phono.events.bind(this, config);
-      
-      this.ringer = this.audioLayer.play({uri:phone.ringTone()}); 
+
+      this.ringer = this.audioLayer.play({uri:phone.ringTone()});
       this.ringback = this.audioLayer.play({uri:phone.ringbackTone()});
       if (this.audioLayer.audioIn){
          this.audioLayer.audioIn(phone.audioInput());
       }
-      
+
    };
 
    Call.prototype.bind = function(config) {
@@ -8008,7 +8008,7 @@ JSEPAudio.prototype.createContainer = function() {
          this.output.start();
       }
    };
-   
+
    Call.prototype.stopAudio = function(iq) {
       if(this.input) {
          this.input.stop();
@@ -8017,35 +8017,35 @@ JSEPAudio.prototype.createContainer = function() {
          this.output.stop();
       }
    };
-   
+
    Call.prototype.start = function() {
-      
+
       var call = this;
 
       if (call.state != CallState.INITIAL) return;
-       
+
       var initiateIq = Strophe.iq({type:"set", to:call.remoteJid});
-      
+
       var initiate = initiateIq.c('jingle', {
          xmlns: NS.JINGLE,
          action: "session-initiate",
          initiator: call.initiator,
          sid: call.id
       });
-                     
+
       $(call.headers).each(function() {
          initiate.c("custom-header", {name:this.name, data:this.value}).up();
       });
-             
+
        var updateIq = Strophe.iq({type:"set", to:call.remoteJid});
-       
+
        var update = updateIq.c('jingle', {
            xmlns: NS.JINGLE,
            action: "transport-accept",
            initiator: call.initiator,
            sid: call.id
        });
-       
+
        var partialUpdate = update
            .c('content', {creator:"initiator"})
            .c('description', {xmlns:this.transport.description})
@@ -8055,15 +8055,15 @@ JSEPAudio.prototype.createContainer = function() {
            initiate = initiate
                .c('content', {creator:"initiator"})
                .c('description', {xmlns:call.transport.description})
-           
+
            Phono.util.each(call.config.codecs(Phono.util.filterWideband(call.audioLayer.codecs(),call.phone.wideband())), function() {
                initiate = initiate.c('payload-type', {
                    id: this.id,
                    name: this.name,
                    clockrate: this.rate
-               }).up();           
+               }).up();
            });
-           
+
            // Add any crypto that wasn't in the transport layer
            var required = "0";
            if (call._security == "mandatory") required = "1";
@@ -8072,12 +8072,12 @@ JSEPAudio.prototype.createContainer = function() {
                    tag: call.tag,
                    'crypto-suite': call.crypto,
                    'key-params': call.keyparams
-               }).up();    
+               }).up();
            }
            initiate = initiate.up();
        }
-       
-       this.transport.buildTransport("offer", initiate, 
+
+       this.transport.buildTransport("offer", initiate,
                                      function() {
                                          // Check that we still mean to
                                          if (call.state != CallState.DISCONNECTED) {
@@ -8091,21 +8091,21 @@ JSEPAudio.prototype.createContainer = function() {
                                          // Check that we still mean to
                                          if (call.state != CallState.DISCONNECTED) {
                                              call.connection.sendIQ(updateIq, function (iq) {
-                                             });   
+                                             });
                                          }
                                      }
                                     );
 
    };
-   
+
    Call.prototype.accept = function() {
 
       var call = this;
 
       if (call.state != CallState.PROGRESS) return;
-      
+
       var jingleIq = Strophe.iq({
-         type: "set", 
+         type: "set",
          to: call.remoteJid})
          .c('jingle', {
             xmlns: NS.JINGLE,
@@ -8115,83 +8115,83 @@ JSEPAudio.prototype.createContainer = function() {
          .c('ringing', {
             xmlns:NS.JINGLE_SESSION_INFO}
       );
-         
+
       this.connection.sendIQ(jingleIq, function (iq) {
           call.state = CallState.RINGING;
           Phono.events.trigger(call, "ring");
       });
 
    };
-   
+
    Call.prototype.answer = function() {
-      
+
       var call = this;
-      
-      if (call.state != CallState.RINGING 
+
+      if (call.state != CallState.RINGING
       && call.state != CallState.PROGRESS) return;
 
        var acceptIq = Strophe.iq({type:"set", to:call.remoteJid});
-      
+
        var accept = acceptIq.c('jingle', {
            xmlns: NS.JINGLE,
            action: "session-accept",
            initiator: call.initiator,
            sid: call.id
        });
-       
-       
-       
+
+
+
        var updateIq = Strophe.iq({type:"set", to:call.remoteJid});
-      
+
        var update = updateIq.c('jingle', {
            xmlns: NS.JINGLE,
            action: "transport-replace",
            initiator: call.initiator,
            sid: call.id
        });
-       
+
        var partialUpdate = update
            .c('content', {creator:"initiator"})
            .c('description', {xmlns:this.transport.description})
-       
+
        if (call.transport.description) {
            var accept = accept
                .c('content', {creator:"initiator"})
                .c('description', {xmlns:call.transport.description});
-           
+
            accept = accept.c('payload-type', {
                id: call.codec.id,
                name: call.codec.name,
                clockrate: call.codec.rate
-           }).up();           
-           
+           }).up();
+
            $.each((call.audioLayer.codecs()), function() {
                if (this.name == "telephone-event") {
                    accept = accept.c('payload-type', {
                        id: this.id,
                        name: this.name,
                        clockrate: this.rate
-                   }).up();     
-               } 
+                   }).up();
+               }
            });
-           
+
            // Add our crypto
            if (call.srtpPropsl != undefined && call.srtpPropsr != undefined) {
                accept = accept.c('encryption').c('crypto', {
                    tag: call.tag,
                    'crypto-suite': call.crypto,
                    'key-params': call.keyparams
-               }).up();    
+               }).up();
            }
 
            accept = accept.up();
        }
-       
-       this.transport.buildTransport("answer", accept, 
+
+       this.transport.buildTransport("answer", accept,
                                      function(codec){
                                          // If the codec changed, set it for correctness
                                          if (codec) call.codec = codec;
-                                         
+
                                          call.connection.sendIQ(acceptIq, function (iq) {
                                              call.state = CallState.CONNECTED;
                                              if (call.ringer != null) call.ringer.stop();
@@ -8210,7 +8210,7 @@ JSEPAudio.prototype.createContainer = function() {
                                      partialUpdate.up(),
                                      function() {
                                          call.connection.sendIQ(updateIq, function (iq) {
-                                         });   
+                                         });
                                      });
    };
 
@@ -8229,7 +8229,7 @@ JSEPAudio.prototype.createContainer = function() {
               Phono.events.trigger(call, "mediaReady");
           }});
    };
-   
+
    Call.prototype.hangup = function() {
 
       var call = this;
@@ -8238,13 +8238,13 @@ JSEPAudio.prototype.createContainer = function() {
           call.state = CallState.DISCONNECTED;
           return;
       }
-      
-      if (call.state != CallState.CONNECTED 
-       && call.state != CallState.RINGING 
+
+      if (call.state != CallState.CONNECTED
+       && call.state != CallState.RINGING
        && call.state != CallState.PROGRESS) return;
-      
+
       var jingleIq = Strophe.iq({
-         type:"set", 
+         type:"set",
          to:call.remoteJid})
          .c('jingle', {
             xmlns: NS.JINGLE,
@@ -8255,16 +8255,16 @@ JSEPAudio.prototype.createContainer = function() {
 
       call.stopAudio();
       if (call.transport.destroyTransport) call.transport.destroyTransport();
-             
+
       this.connection.sendIQ(jingleIq, function (iq) {
           call.state = CallState.DISCONNECTED;
           Phono.events.trigger(call, "hangup");
           if (call.ringer != null) call.ringer.stop();
-          if (call.ringback != null) call.ringback.stop();          
+          if (call.ringback != null) call.ringback.stop();
       });
-      
+
    };
-   
+
    Call.prototype.digit = function(value, duration) {
       if(!duration) {
          duration = 50;
@@ -8274,7 +8274,7 @@ JSEPAudio.prototype.createContainer = function() {
       } else {
           // Send as Jingle
           var jingleIq = Strophe.iq({
-              type: "set", 
+              type: "set",
               to: this.remoteJid})
               .c('jingle', {
                   xmlns: NS.JINGLE,
@@ -8286,7 +8286,7 @@ JSEPAudio.prototype.createContainer = function() {
                   code: value,
                   duration: duration,
                   volume: "42"});
-          
+
           this.connection.sendIQ(jingleIq);
           if (this.output.freep){
              Phono.log.debug("freep "+value);
@@ -8296,7 +8296,7 @@ JSEPAudio.prototype.createContainer = function() {
           }
       }
    };
-   
+
    Call.prototype.pushToTalk = function(value) {
    	if(arguments.length === 0) {
    	    return this._pushToTalk;
@@ -8325,7 +8325,7 @@ JSEPAudio.prototype.createContainer = function() {
 
    // TODO: hold should be implemented in JINGLE
    Call.prototype.hold = function(hold) {
-      
+
    };
 
    Call.prototype.volume = function(value) {
@@ -8376,7 +8376,7 @@ JSEPAudio.prototype.createContainer = function() {
    	}
    	this._security = value;
    };
-   
+
    Call.prototype.headset = function(value) {
    	if(arguments.length === 0) {
    	    return this._headset;
@@ -8386,7 +8386,7 @@ JSEPAudio.prototype.createContainer = function() {
    	   this.output.suppress(!value);
    	}
    };
-   
+
 	Call.prototype.pushToTalkStateChanged = function() {
 	   if(this.input && this.output) {
    		if (this._pushToTalk) {
@@ -8403,7 +8403,7 @@ JSEPAudio.prototype.createContainer = function() {
    		}
 	   }
 	};
-   
+
    Call.prototype.negotiate = function(iq) {
 
       var call = this;
@@ -8419,22 +8419,22 @@ JSEPAudio.prototype.createContainer = function() {
              if ((this.name == codecName && this.rate == codecRate && this.name != "telephone-event") || (parseInt(this.id) < 90 && this.id == codecId)) {
                  if (codec == null) codec = {id: codecId , name:this.name,  rate: this.rate, p: this.p};
                  return false;
-            } 
+            }
          });
       });
-      
+
       // Check to see if we have crypto, we only support AES_CM_128_HMAC_SHA1_80
       if (call._security != "disabled" && this.transport.supportsSRTP == true) {
           description.find('crypto').each(function () {
               if ($(this).attr('crypto-suite') == call.crypto) {
-                  call.srtpPropsr = Phono.util.srtpProps($(this).attr('tag'), 
-                                                         $(this).attr('crypto-suite'), 
-                                                         $(this).attr('key-params'), 
+                  call.srtpPropsr = Phono.util.srtpProps($(this).attr('tag'),
+                                                         $(this).attr('crypto-suite'),
+                                                         $(this).attr('key-params'),
                                                          $(this).attr('session-params'));
                   call.tag = $(this).attr('tag'); // So we can answer with the correct tag
               }
           });
-          
+
           if (call._security == "mandatory" && call.srtpPropsr == undefined) {
               // We must fail the call, remote end did not agree on crypto
               Phono.log.error("No security when mandatory specified");
@@ -8459,7 +8459,7 @@ JSEPAudio.prototype.createContainer = function() {
                   if (transport.codec) {
                       // If the codec changed, set it for correctness
                       codec = transport.codec;
-                  };      
+                  };
               } else {
                   Phono.log.error("No valid candidate in transport");
               }
@@ -8484,12 +8484,12 @@ JSEPAudio.prototype.createContainer = function() {
       }
 
       return codec;
-       
+
    };
 
    // Phone
    //
-   // A Phone is created automatically with each Phono instance. 
+   // A Phone is created automatically with each Phono instance.
    // Basic Phone allows setting  ring tones,  ringback tones, etc.
    // =================================================================
 
@@ -8498,7 +8498,7 @@ JSEPAudio.prototype.createContainer = function() {
       var phone = this;
       this.phono = phono;
       this.connection = phono.connection;
-      
+
       // Initialize call hash
       this.calls = {};
 
@@ -8515,52 +8515,52 @@ JSEPAudio.prototype.createContainer = function() {
          codecs: function(offer) {return offer;},
          security: "disabled" // mandatory, disabled
       }, config);
-      
+
       // Apply config
       Phono.util.each(this.config, function(k,v) {
          if(typeof phone[k] == "function") {
             phone[k](v);
          }
       });
-      
+
       // Bind Event Listeners
       Phono.events.bind(this, config);
-      
+
       // Register Strophe handler for JINGLE messages
       this.connection.addHandler(
-         this.doJingle.bind(this), 
+         this.doJingle.bind(this),
          NS.JINGLE, "iq", "set"
       );
-      
+
       callback(this);
 
    };
 
    Phone.prototype.doJingle = function(iq) {
-      
+
       var phone = this;
       var audioLayer = this.phono.audio;
-      
+
       var jingle = $(iq).find('jingle');
       var action = jingle.attr('action') || "";
       var id = jingle.attr('sid') || "";
       var call = this.calls[id] || null;
-      
+
       switch(action) {
-         
+
          // Inbound Call
          case "session-initiate":
-         
+
             call = Phono.util.loggify("Call", new Call(phone, id, Direction.INBOUND));
             call.phone = phone;
             call.remoteJid = $(iq).attr('from');
             call.initiator = jingle.attr('initiator');
-            
+
             // Register Call
             phone.calls[call.id] = call;
 
             call.state = CallState.PROGRESS;
-          
+
             // Negotiate SDP
             call.codec = call.negotiate(iq);
             if(call.codec == null) {
@@ -8568,7 +8568,7 @@ JSEPAudio.prototype.createContainer = function() {
                 call.hangup();
                 break;
             }
-            
+
             // Get incoming headers
             call.headers = new Array();
             jingle.find("custom-header").each(function() {
@@ -8580,7 +8580,7 @@ JSEPAudio.prototype.createContainer = function() {
 
             // Start ringing
             if (call.ringer != null) call.ringer.start();
-            
+
             // Auto accept the call (i.e. send ringing)
             call.accept();
 
@@ -8588,17 +8588,17 @@ JSEPAudio.prototype.createContainer = function() {
             Phono.events.trigger(this, "incomingCall", {
                call: call
             });
-          
+
             // Get microphone permission if we are going to need it
             if(!audioLayer.permission()) {
                 Phono.events.trigger(audioLayer, "permissionBoxShow");
             }
-                        
+
             break;
-            
+
          // Accepted Outbound Call
          case "session-accept":
-         
+
             // Negotiate SDP
             call.codec = call.negotiate(iq);
             if(call.codec == null) {
@@ -8606,13 +8606,13 @@ JSEPAudio.prototype.createContainer = function() {
                 call.hangup();
                 break;
             }
-          
+
             // Stop ringback
             if (call.ringback != null) call.ringback.stop();
-          
+
             // Connect audio streams
             call.setupBinding();
-          
+
             // Belt and braces
             if (call._security == "mandatory" && call.output.secure() == false) {
                 // We must fail the call, remote end did not agree on crypto
@@ -8624,7 +8624,7 @@ JSEPAudio.prototype.createContainer = function() {
             call.startAudio();
 
             call.state = CallState.CONNECTED;
-                
+
             // Fire answer event
             Phono.events.trigger(call, "answer")
             break;
@@ -8637,9 +8637,9 @@ JSEPAudio.prototype.createContainer = function() {
 
          // Hangup
          case "session-terminate":
-            
+
             call.state = CallState.DISCONNECTED;
-            
+
             call.stopAudio();
             if (call.ringer != null) call.ringer.stop();
             if (call.ringback != null) call.ringback.stop();
@@ -8647,35 +8647,35 @@ JSEPAudio.prototype.createContainer = function() {
 
             // Fire hangup event
             Phono.events.trigger(call, "hangup")
-            
+
             break;
-            
+
          // Ringing
          case "session-info":
-         
+
             if ($(iq).find('ringing')) {
                call.state = CallState.RINGING;
                if (call.ringback != null) call.ringback.start();
                Phono.events.trigger(call, "ring")
             }
-            
+
             break;
       }
 
       // Send Reply
       this.connection.send(
          Strophe.iq({
-            type: "result", 
+            type: "result",
              id: $(iq).attr('id'),
              to:call.remoteJid
          })
       );
-      
-      return true;      
+
+      return true;
    };
-   
+
    Phone.prototype.dial = function(to, config) {
-      
+
       //Generate unique ID
       var id = Phono.util.guid();
 
@@ -8694,7 +8694,7 @@ JSEPAudio.prototype.createContainer = function() {
           call.initiator = this.connection.jid;
       }
 
-      // Give platform a chance to fix up 
+      // Give platform a chance to fix up
       // the destination and add headers
       this.beforeDial(call);
 
@@ -8703,17 +8703,17 @@ JSEPAudio.prototype.createContainer = function() {
 
       // Kick off JINGLE invite
       call.start();
-      
+
       return call;
    };
-   
+
    Phone.prototype.beforeDial = function(call) {
       var to = call.remoteJid;
       if(to.match("^sip:") || to.match("^sips:")) {
          call.remoteJid = Phono.util.escapeXmppNode(to.substr(4)) + "@sip";
       }
       else if(to.match("^xmpp:")) {
-         call.remoteJid = to.substr(5); 
+         call.remoteJid = to.substr(5);
       }
       else if(to.match("^app:")) {
          call.remoteJid = Phono.util.escapeXmppNode(to.substr(4)) + "@app";
@@ -8746,7 +8746,7 @@ JSEPAudio.prototype.createContainer = function() {
       }
       this._audioInput = value;
    };
-   
+
    Phone.prototype.audioInDevices = function(){
        var audiolayer = this.phono.audio;
        var ret = new Object();
@@ -8799,7 +8799,7 @@ JSEPAudio.prototype.createContainer = function() {
          return Phono.util.loggify("Phone", new Phone(phono, config, callback));
       }
    });
-      
+
 })();
 
 
@@ -8812,9 +8812,9 @@ JSEPAudio.prototype.createContainer = function() {
     // Register Loggign Callback
     Phono.events.add(Phono.log, "log", function(event) {
         var date = event.timeStamp;
-        var formattedDate = 
-        Phono.util.padWithZeroes(date.getHours(), 2) + ":" + 
-        Phono.util.padWithZeroes(date.getMinutes(), 2) + ":" + 
+        var formattedDate =
+        Phono.util.padWithZeroes(date.getHours(), 2) + ":" +
+        Phono.util.padWithZeroes(date.getMinutes(), 2) + ":" +
         Phono.util.padWithZeroes(date.getSeconds(), 2) + "." +
         Phono.util.padWithZeroes(date.getMilliseconds(), 3);
         var formattedMessage = formattedDate + " " + Phono.util.padWithSpaces(event.level.name, 5) + " - " + event.getCombinedMessages();
@@ -8825,7 +8825,7 @@ JSEPAudio.prototype.createContainer = function() {
         console.log(formattedMessage);
     });
 
-    // PluginManager is responsible for initializing plugins an 
+    // PluginManager is responsible for initializing plugins an
     // notifying when all plugins are initialized
     function PluginManager(phono, config, readyHandler) {
         this.index = 0;
@@ -8856,12 +8856,12 @@ JSEPAudio.prototype.createContainer = function() {
             }
         });
     };
-   
+
 })();
 
-   
+
    $.phono = function(config) {
       return new Phono(config);
    }
-   
+
 })(jQuery);
